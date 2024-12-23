@@ -7,20 +7,14 @@
   library(purrr)
   library(janitor)
   library(sf)
+  library(ozmaps)
 }
 
 galah_config(email = Sys.getenv("ALA_EMAIL"))
-sf_use_s2(FALSE)
+#sf_use_s2(FALSE)
+conflicted::conflicts_prefer(
+  dplyr::filter,
+  tidyr::unnest
+)
 
 source("functions.R")
-
-# data -------
-ibra <- readRDS(here("data", "spatial", "ibra_hotspot.RDS")) |> 
-  pull(REG_NAME_7)
-
-
-
-
-# OTHER (rename this probs)
-ala_profile.R
-identify_ibra.R

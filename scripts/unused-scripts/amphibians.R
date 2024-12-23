@@ -1,3 +1,19 @@
+
+# list of species in hotspot
+frogs <- get_n_species("amphibia")
+csig_plus <- galah_call() |> 
+  identify(frogs$taxon_concept_id[1:50]) |> 
+  galah_apply_profile(ALA) |> 
+  filter(year >= 2000) |> 
+  select(species, decimalLongitude, decimalLatitude) |> 
+  atlas_occurrences()
+
+# this certainly produces something, but not entirely certain what...
+pt <- points2comm(dat = csig_plus, res = 0.5)
+end <- weighted_endemism(pt$comm_dat)
+m <- merge(pt$map, data.frame(grids=names(end), WE=end), by="grids")
+plot(m, "WE")
+
 # this is the value for the first cell: number of unique species
 # 171 species
 frogs <- galah_call() |> 
@@ -6,6 +22,8 @@ frogs <- galah_call() |>
   filter(year >= 1950,
          cl1048 %in% ibra) |> 
   atlas_species()
+
+frogs <- get_n_species("amphibia")
 
 # 85 endemic species
 # galah_call() |> 
@@ -35,7 +53,7 @@ frog_count <- frogs |>
                                atlas_counts()
                            })),
          count_outside_ibra = count_all - count_ibra, 
-         prop_within_ibra = round(count_ibra/count_all, 2),
+         prop_within_ibra = round(count_ibra/count_all, 3),
          endemic = case_when(
            between(count_ibra, 10, 50) & prop_within_ibra == 1.00 ~ "endemic",
            count_ibra > 50 & prop_within_ibra >= 0.95 ~ "endemic"))
