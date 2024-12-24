@@ -1,4 +1,4 @@
-# datasets submitted to sharepoint
+# datasets added to sharepoint
 
 # species list (richness)
 fauna_df <- fauna |> 
@@ -17,6 +17,12 @@ flora_endemic |>
   select(-c(scientific_name_authorship, taxon_rank, total_count, hotspot_count, prop_within_ibra, endemic)) |> 
   write_csv("output/endemic_species_list_flora_20241224.csv")
 
+endm_files <- list.files(path = "data/interim-tables", full.names = TRUE)
+endm_files |> 
+  set_names(gsub(".*tables/([a-z]+)_.*", "\\1", endm_files)) |> 
+  map(get_endemic_fauna) |> 
+  list_rbind(names_to = "taxon_type") |> 
+  write_csv("output/endemic_species_list_fauna_20241224.csv")
 
 # summary table
 flora_summary <- tibble(

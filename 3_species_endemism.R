@@ -84,6 +84,10 @@ endm_fauna_counts <- endm_files |>
   set_names(gsub(".*tables/([a-z]+)_.*", "\\1", endm_files)) |> 
   map(calc_endm)
 
+endm_files |> 
+  set_names(gsub(".*tables/([a-z]+)_.*", "\\1", endm_files)) |> 
+  map(get_endemic_fauna)  
+  
 
 
 

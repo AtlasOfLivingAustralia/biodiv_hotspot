@@ -105,3 +105,27 @@ calc_endm <- function(fpath) {
     nrow()
   
 }
+
+get_endemic_fauna <- function(fpath) {
+  
+  if(grepl("birds", fpath)) {
+    x <- readRDS(fpath) |> 
+      mutate(prop = round(hotspot_count/total_count, 3),
+             endm = case_when(
+               between(hotspot_count, 10, 50) & prop == 1.00 ~ "endemic",
+               hotspot_count > 50 & prop >= 0.870 ~ "endemic")) |> 
+      filter(endm == "endemic") |> 
+      select(species_name, taxon_concept_id)
+  } else {
+    x <- readRDS(fpath) |> 
+      mutate(prop = round(hotspot_count/total_count, 3),
+             endm = case_when(
+               between(hotspot_count, 10, 50) & prop == 1.00 ~ "endemic",
+               hotspot_count > 50 & prop >= 0.950 ~ "endemic")) |> 
+      filter(endm == "endemic") |> 
+      select(species_name, taxon_concept_id)
+  }
+  
+  return(x)
+  
+}
