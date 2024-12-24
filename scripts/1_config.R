@@ -8,6 +8,7 @@
   library(janitor)
   library(sf)
   library(ozmaps)
+  library(tidyr)
 }
 
 galah_config(email = Sys.getenv("ALA_EMAIL"))
@@ -17,7 +18,7 @@ conflicted::conflicts_prefer(
   tidyr::unnest
 )
 
-source("functions.R")
+source("scripts/functions.R")
 
 # identify IBRA --------
 # figure out which of the IBRA regions correspond to the Forests of East 

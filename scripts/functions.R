@@ -11,7 +11,7 @@ get_n_species <- function(taxon) {
   
 }
 
-get_n_species_ibra <- function(taxon, ibra_region) {
+get_n_species_ibra <- function(taxon, ibra_region, ...) {
   
   galah_call() |> 
     identify(taxon) |> 

@@ -45,4 +45,8 @@ endm_fauna_counts |>
   bind_rows(flora_summary) |> 
   write_csv("output/summary_counts_20241224.csv")
 
-
+# bioregional species list
+readRDS(here("data", "processed", "species_list_bioregional.RDS")) |>
+  distinct() |> 
+  write_csv("output/species_list_bioregional_20241224.csv")
+  

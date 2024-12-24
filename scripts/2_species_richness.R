@@ -5,15 +5,12 @@
 ibra <- readRDS(here("data", "spatial", "ibra_hotspot.RDS")) |> 
   pull(REG_NAME_7)
 
+taxon_lookup <- read_csv(here("data", "taxon_lookup.csv"))
+
 # vertebrates ----
-vertebrates <- c("aves",
-                 "mammalia",
-                 "reptilia",
-                 "amphibia",
-                 "agnatha",
-                 "actinopterygii",
-                 "chondrichthyes",
-                 "sarcopterygii") |> 
+vertebrates <- taxon_lookup |> 
+  filter(type == "vertebrates") |> 
+  pull(ala_classification) |> 
   set_names() |> 
   map(get_n_species)
 
@@ -29,35 +26,26 @@ fauna <- list(birds = vertebrates$aves,
 saveRDS(fauna, here("data", "processed", "fauna.RDS"))
 
 # vascular plants ------
-monocots <- get_n_species(c("Bromaceae", 
-                            "Cypripediaceae", 
-                            "Melanthiaceae", 
-                            "Lilianae")) 
+monocots <- taxon_lookup |> 
+  filter(taxon_type == "monocots") |> 
+  pull(ala_classification) |>
+  get_n_species()
+  
+dicots <- taxon_lookup |> 
+  filter(taxon_type == "dicots") |> 
+  pull(ala_classification) |>
+  get_n_species()
 
-dicots <- get_n_species(c("Magnoliidae", "Desfontainiaceae", "Bruniaceae",
-                          "Buxaceae", "Chloranthaceae", "Staphyleaceae",
-                          "Strasburgeriaceae", "Dipentodontaceae", "Tapisciaceae",
-                          "Picramniaceae", "Canellaceae", "Chloanthaceae",
-                          "Cornaceae", "Cynomoriaceae", "Cyrillaceae", 
-                          "Garryaceae", "Magnoliaceae", "Nesogenaceae",
-                          "Saururaceae", "Styracaceae", "Trapaceae"))
-
-gymnosperms <- get_n_species(c("Pinidae", 
-                               "Pinophyta", 
-                               "Spermatophytina", 
-                               "Ephedraceae Dumort."))
-
-ferns <- get_n_species(c("Polypodiidae",
-                         "Marattiaceae",
-                         "Ophioglossaceae",
-                         "Psilotaceae",
-                         "Polypodiopsida",
-                         "Hymenophyllaceae",
-                         "Psilotaceae",
-                         "Pteridaceae",
-                         "Salviniaceae",
-                         "Pteridophyta"))
-
+gymnosperms <- taxon_lookup |> 
+  filter(taxon_type == "gymnosperms") |> 
+  pull(ala_classification) |>
+  get_n_species()
+  
+ferns <- taxon_lookup |> 
+  filter(taxon_type == "ferns") |> 
+  pull(ala_classification) |>
+  get_n_species()
+  
 flora <- list(dicots = dicots, 
               monocots = monocots, 
               ferns = ferns, 
@@ -66,21 +54,15 @@ flora <- list(dicots = dicots,
 saveRDS(flora, here("data", "processed", "flora.RDS"))
 
 # bioregional analyses ---------
-vert_names <- c("aves",
-                "mammalia",
-                "reptilia",
-                "amphibia",
-                "agnatha",
-                "actinopterygii",
-                "chondrichthyes",
-                "sarcopterygii")
+expanded_taxa_ibra <- expand.grid(taxon_names = taxon_lookup$ala_classification,
+                                  ibra_names = ibra)
 
-expanded_vert_ibra <- expand.grid(taxon_names = vert_names, ibra_names = ibra)
-
-map2(expanded_vert_ibra$taxon_names, 
-     expanded_vert_ibra$ibra_names, 
-     get_n_species_ibra) |> 
-  set_names(paste0(expanded_vert_ibra$taxon_names, "_", expanded_vert_ibra$ibra_names)) |> 
-  saveRDS(here("data", "processed", "fauna_bioregional.RDS"))
-
-
+map2(expanded_taxa_ibra$taxon_names, expanded_taxa_ibra$ibra_names, get_n_species_ibra) |> 
+  set_names(paste0(expanded_taxa_ibra$taxon_names, "_", expanded_taxa_ibra$ibra_names)) |> 
+  list_rbind(names_to = "taxa_ibra") |> 
+  remove_empty(which = c("cols")) |> 
+  select(-scientific_name_authorship, -taxon_rank) |> 
+  separate_wider_delim(taxa_ibra, delim = "_", names = c("ala_classification", "ibra")) |> 
+  left_join(taxon_lookup, by = "ala_classification") |> 
+  select(-ala_classification) |> 
+  saveRDS(here("data", "processed", "species_list_bioregional.RDS"))
