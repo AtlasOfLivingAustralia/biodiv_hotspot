@@ -1,0 +1,48 @@
+type,taxon_type,ala_classification
+vascular plants,monocots,Bromaceae
+vascular plants,monocots,Cypripediaceae
+vascular plants,monocots,Melanthiaceae
+vascular plants,monocots,Lilianae
+vascular plants,dicots,Magnoliidae
+vascular plants,dicots,Buxaceae
+vascular plants,dicots,Strasburgeriaceae
+vascular plants,dicots,Picramniaceae
+vascular plants,dicots,Canellaceae
+vascular plants,dicots,Nesogenaceae
+vascular plants,dicots,Saururaceae
+vascular plants,dicots,Desfontainiaceae
+vascular plants,dicots,Bruniaceae
+vascular plants,dicots,Trapaceae
+vascular plants,dicots,Styracaceae
+vascular plants,dicots,Garryaceae
+vascular plants,dicots,Magnoliaceae
+vascular plants,dicots,Cornaceae
+vascular plants,dicots,Cyrillaceae
+vascular plants,dicots,Cynomoriaceae
+vascular plants,dicots,Chloanthaceae
+vascular plants,dicots,Tapisciaceae
+vascular plants,dicots,Dipentodontaceae
+vascular plants,dicots,Staphyleaceae
+vascular plants,dicots,Chloranthaceae
+vascular plants,gymnosperms,Pinidae
+vascular plants,gymnosperms,Pinophyta
+vascular plants,gymnosperms,Spermatophytina
+vascular plants,gymnosperms,Ephedraceae Dumort.
+vascular plants,ferns,Polypodiidae
+vascular plants,ferns,Marattiaceae
+vascular plants,ferns,Ophioglossaceae
+vascular plants,ferns,Psilotaceae
+vascular plants,ferns,Polypodiopsida
+vascular plants,ferns,Hymenophyllaceae
+vascular plants,ferns,Psilotaceae
+vascular plants,ferns,Pteridaceae
+vascular plants,ferns,Salviniaceae
+vascular plants,ferns,Pteridophyta
+vertebrates,fish,agnatha
+vertebrates,fish,actinopterygii
+vertebrates,fish,chondrichthyes
+vertebrates,fish,sarcopterygii
+vertebrates,reptiles,reptilia
+vertebrates,birds,aves
+vertebrates,mammals,mammalia
+vertebrates,amphibians,amphibia
