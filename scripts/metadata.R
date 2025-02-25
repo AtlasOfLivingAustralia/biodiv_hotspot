@@ -17,3 +17,20 @@ search_profiles("ALA") |>
 
 read_csv("data/taxon_lookup.csv") |> 
   write_csv("output/taxon_reference.csv")
+
+
+# 3. Data sources ---------
+# Names of data providers within the ALA that contributed data used in these
+# analyses, and the counts of records from each data provider that were
+# initially downloaded
+
+galah_call() |> 
+  identify(taxon_lookup$ala_classification) |> 
+  galah_apply_profile(ALA) |> 
+  filter(year >= 1950,
+         cl1048 %in% hotspot_regions, 
+         countryConservation != "Extinct",
+         countryConservation != "Extinct in the wild") |> 
+  group_by(dataResourceName) |>
+  atlas_counts() |> 
+  write_csv("output/data_sources_biodiv_hotspot.csv")

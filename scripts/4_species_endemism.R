@@ -11,10 +11,7 @@
 # 
 # NOTE: if re-writing scripts, parquet files would be faster to write (but
 # bigger) so might be worth swapping over from RDS files
-#
-# TODO: 
-# figure out why length(all_occ) is != nrow(vertebrate_taxa)
-# maybe add some checks for endemic species?
+
 
 # vertebrates ------
 
