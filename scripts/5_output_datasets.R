@@ -94,6 +94,51 @@ readRDS(here("data", "processed", "vertebrates_temperate_endemic.RDS")) |>
   write_csv(here("output", "vertebrates_temperate_endemic.csv"))
 
 
+# species endemism: 1-9 records ---------
+### vertebrates ------
+get_putative_endemic_spp("vertebrates_hotspot_counts.RDS")
+get_putative_endemic_spp("vertebrates_tropics_counts.RDS")
+get_putative_endemic_spp("vertebrates_temperate_counts.RDS")
+
+### vascular plants --------
+
+readRDS(here("data", "processed", "vascular_plants_hotspot_endemic.RDS")) |> 
+  list_rbind(names_to = "taxon_type") |> 
+  filter(taxon_rank == "species", 
+         is.na(endemic)) |> 
+  filter(between(region_count, 1, 9)) |> 
+  select(taxon_concept_id, 
+         species_name, 
+         taxon_type,
+         total_count = aus_count,
+         region_count) |> 
+  write_csv(here("output", "vascular_plants_hotspot_possible_endemic.csv"))
+
+readRDS(here("data", "processed", "vascular_plants_temperate_endemic.RDS")) |> 
+  list_rbind(names_to = "taxon_type") |> 
+  filter(taxon_rank == "species", 
+         is.na(endemic)) |> 
+  filter(between(region_count, 1, 9)) |> 
+  select(taxon_concept_id, 
+         species_name, 
+         taxon_type,
+         total_count = aus_count,
+         region_count) |> 
+  write_csv(here("output", "vascular_plants_temperate_possible_endemic.csv"))
+
+readRDS(here("data", "processed", "vascular_plants_tropics_endemic.RDS")) |> 
+  list_rbind(names_to = "taxon_type") |> 
+  filter(taxon_rank == "species", 
+         is.na(endemic)) |> 
+  filter(between(region_count, 1, 9)) |> 
+  select(taxon_concept_id, 
+         species_name, 
+         taxon_type,
+         total_count = aus_count,
+         region_count) |> 
+  write_csv(here("output", "vascular_plants_tropics_possible_endemic.csv"))
+
+
 # summary counts ------
 ### hotspot -------
 summarise_counts(spp_richness_csv = "species_richness_hotspot.csv",

@@ -8,6 +8,9 @@
 # For plants, endemism is calculated based on the proportion of occurrence
 # records occurring within the hotspot relative to the total number of
 # occurrences across Australia. 
+#
+# Lists of possibly endemic species, with between 1 and 9 records in regions
+# of interest, are generated for experts to manually verify.
 # 
 # NOTE: if re-writing scripts, parquet files would be faster to write (but
 # bigger) so might be worth swapping over from RDS files
