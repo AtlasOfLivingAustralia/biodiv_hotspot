@@ -2,14 +2,11 @@
 {
   library(galah)
   library(here)
-  library(dplyr)
-  library(readr)
-  library(purrr)
+  library(tidyverse)
   library(janitor)
-  library(stringr)
   library(sf)
   library(ozmaps)
-  library(tidyr)
+  library(rfishbase)
 }
 
 galah_config(email = Sys.getenv("ALA_EMAIL"))

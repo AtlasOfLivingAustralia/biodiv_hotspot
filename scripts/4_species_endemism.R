@@ -34,7 +34,7 @@ aus_grid <- st_make_grid(aus_map,
   st_intersection(st_geometry(aus_map)) |>  
   st_as_sf() |> 
   st_set_geometry("grid_geometry") |> 
-  tibble::rowid_to_column(var = "grid_id")
+  rowid_to_column(var = "grid_id")
 
 ### get occurrence records ------
 dir.create("data/tmp_occ")
@@ -64,7 +64,7 @@ tropics_spp <- readRDS(here("data", "processed", "vertebrates_tropics.RDS")) |>
   map(select, species_name) |> 
   list_rbind() |> 
   mutate(species_name = str_remove_all(species_name, "\\s*\\([^)]*\\)")) |> 
-  tibble::rowid_to_column("tropics_id")
+  rowid_to_column("tropics_id")
   
 all_occ |> 
   as_tibble() |> 
@@ -83,7 +83,7 @@ temperate_spp <- readRDS(here("data", "processed", "vertebrates_temperate.RDS"))
   map(select, species_name) |> 
   list_rbind() |> 
   mutate(species_name = str_remove_all(species_name, "\\s*\\([^)]*\\)")) |> 
-  tibble::rowid_to_column("temperate_id")
+  rowid_to_column("temperate_id")
 
 all_occ |> 
   as_tibble() |> 
