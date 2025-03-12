@@ -9,12 +9,9 @@
   library(rfishbase)
 }
 
-galah_config(email = Sys.getenv("ALA_EMAIL"))
+conflicted::conflicts_prefer(dplyr::filter, tidyr::unnest)
 
-conflicted::conflicts_prefer(
-  dplyr::filter,
-  tidyr::unnest
-)
+galah_config(email = Sys.getenv("ALA_EMAIL"))
 
 source("scripts/functions.R")
 
@@ -35,6 +32,9 @@ ibra_lookup <- tibble(region_name = c("Wet Tropics",
 hotspot_regions <- ibra_lookup$region_name
 tropics_regions <- ibra_lookup$region_name[ibra_lookup$ecoregion_type == "tropics"]
 temperate_regions <- ibra_lookup$region_name[ibra_lookup$ecoregion_type == "temperate"]
+
+# fish habitats lookup (needs to be redone if list of fish changes)
+fish_habitats <- readRDS("data/processed/fish_habitats.RDS")
 
 # projections are to Australian Albers Equal-Area CRS 3577
 st_read(here("data", "ibra7", "ibra7_regions.shp")) |>

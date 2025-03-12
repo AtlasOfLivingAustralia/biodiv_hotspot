@@ -26,6 +26,30 @@ reclassify_groups <- function(filename) {
   
 }
 
+reclassify_fish <- function(list_of_taxa) {
+  
+  fish <- list_of_taxa |> 
+    pluck("fish") |> 
+    ungroup() 
+  
+  split_fish <- fish |> 
+    left_join(fish_habitats, by = "species_name") |> 
+    select(-c(taxon_type, fresh, brack, saltwater, source)) |> 
+    mutate(taxon_type = paste0(habitat_type, " fish")) |> 
+    select(-habitat_type) |> 
+    group_by(taxon_type) |> 
+    distinct() %>% 
+    split(f = as.factor(.$taxon_type)) 
+  
+  reclassified_fish <- c(list_of_taxa[names(list_of_taxa) != "fish"], split_fish)
+  
+  stopifnot("The number of rows in the provided and generated lists do not match" = 
+              nrow(list_rbind(reclassified_fish)) == nrow(list_rbind(list_of_taxa)))
+  
+  return(reclassified_fish)
+  
+}
+
 get_aus_counts <- function(taxon_concept_id) {
   
   galah_call() |> 
@@ -160,3 +184,5 @@ summarise_counts <- function(spp_richness_csv, animal_endemic_csv, plant_endemic
     write_csv(paste0("output/summary_count_", file_suffix, ".csv"))
   
 }
+
+
