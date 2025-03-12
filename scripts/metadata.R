@@ -1,4 +1,4 @@
-# This script describes how metadata pertaining to this project were derived
+# This script derives metedata relating to this project 
 
 # 1. ALA DQ profile -------
 # Gets the values for the ALA DQ profile, with descriptions and a list of the
@@ -34,3 +34,7 @@ galah_call() |>
   group_by(dataResourceName) |>
   atlas_counts() |> 
   write_csv("output/data_sources_biodiv_hotspot.csv")
+
+# 4. Fish habitats ------
+readRDS("data/processed/fish_habitats.RDS") |> 
+  write_csv("output/fish_habitats.csv")
