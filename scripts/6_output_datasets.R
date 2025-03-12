@@ -1,34 +1,38 @@
-# This script modifies the processed files generated in 2_species_richness.R and
+# This script wrangles the processed files generated in 2_species_richness.R and
 # 4_species_endemism.R to create output files added to the SharePoint folder
 
 # species richness -----
 ### hotspot ------
 plants <- reclassify_groups("vascular_plants_hotspot.RDS")
-animals <- reclassify_groups("vertebrates_hotspot.RDS")
+animals <- reclassify_fish(reclassify_groups("vertebrates_hotspot.RDS"))
 
 plants_df <- plants |> 
   list_rbind(names_to = "taxon_type") |> 
   filter(taxon_rank == "species") |> 
-  select(-species, -taxon_rank) 
+  select(-species, -taxon_rank) |> 
+  ungroup()
 animals_df <- animals |> 
   list_rbind(names_to = "taxon_type") |> 
-  select(-taxon_rank)
+  select(-taxon_rank) |> 
+  ungroup()
 
 animals_df |> 
-  bind_rows(plants_df) |>
+  bind_rows(plants_df) |> 
   write_csv(here("output", "species_richness_hotspot.csv"))
 
 ### ecoregions: tropics ------
 plants_tropics <- reclassify_groups("vascular_plants_tropics.RDS")
-animals_tropics <- reclassify_groups("vertebrates_tropics.RDS")
+animals_tropics <- reclassify_fish(reclassify_groups("vertebrates_tropics.RDS"))
 
 plants_tropics_df <- plants_tropics |> 
   list_rbind(names_to = "taxon_type") |> 
   filter(taxon_rank == "species") |> 
-  select(-species, -taxon_rank) 
+  select(-species, -taxon_rank) |> 
+  ungroup()
 animals_tropics_df <- animals_tropics |> 
   list_rbind(names_to = "taxon_type") |> 
-  select(-species, -taxon_rank)
+  select(-species, -taxon_rank) |> 
+  ungroup()
 
 animals_tropics_df |> 
   bind_rows(plants_tropics_df) |> 
@@ -36,15 +40,17 @@ animals_tropics_df |>
 
 ### ecoregions: temperate --------
 plants_temperate <- reclassify_groups("vascular_plants_temperate.RDS")
-animals_temperate <- reclassify_groups("vertebrates_temperate.RDS")
+animals_temperate <- reclassify_fish(reclassify_groups("vertebrates_temperate.RDS"))
 
 plants_temperate_df <- plants_temperate |> 
   list_rbind(names_to = "taxon_type") |>
   filter(taxon_rank == "species") |> 
-  select(-species, -taxon_rank) 
+  select(-species, -taxon_rank) |> 
+  ungroup()
 animals_temperate_df <- animals_temperate |> 
   list_rbind(names_to = "taxon_type") |> 
-  select(-taxon_rank)
+  select(-taxon_rank) |> 
+  ungroup()
 
 animals_temperate_df |> 
   bind_rows(plants_temperate_df) |> 
