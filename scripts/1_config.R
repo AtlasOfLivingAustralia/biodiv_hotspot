@@ -3,39 +3,20 @@
   library(galah)
   library(here)
   library(tidyverse)
+  library(arrow)
   library(janitor)
   library(sf)
   library(ozmaps)
   library(rfishbase)
+  library(readxl)
 }
 
 conflicted::conflicts_prefer(dplyr::filter, tidyr::unnest)
-
 galah_config(email = Sys.getenv("ALA_EMAIL"))
-
 source("scripts/functions.R")
 
-# reference tables, preprocessing ------
-taxon_lookup <- read_csv(here("data", "taxon_lookup.csv"))
-
-# regions
-ibra_lookup <- tibble(region_name = c("Wet Tropics",
-                                      "Central Mackay Coast",
-                                      "South Eastern Queensland",
-                                      "Nandewar",
-                                      "New England Tablelands",
-                                      "NSW North Coast",
-                                      "Sydney Basin"),
-                      ecoregion_type = c(rep("tropics", 2),
-                                         rep("temperate", 5)))
-
-hotspot_regions <- ibra_lookup$region_name
-tropics_regions <- ibra_lookup$region_name[ibra_lookup$ecoregion_type == "tropics"]
-temperate_regions <- ibra_lookup$region_name[ibra_lookup$ecoregion_type == "temperate"]
-
-# fish habitats lookup (needs to be redone if list of fish changes)
-fish_habitats <- readRDS("data/processed/fish_habitats.RDS")
-
+# preprocessing ------
+### spatial -----
 # projections are to Australian Albers Equal-Area CRS 3577
 st_read(here("data", "ibra7", "ibra7_regions.shp")) |>
   filter(REG_NAME_7 %in% ibra_lookup$region_name) |>
@@ -55,7 +36,8 @@ st_read(here("data", "ibra7", "ibra7_regions.shp")) |>
   st_transform(crs = 3577) |> 
   saveRDS(here("data", "processed", "temperate_sf.RDS"))
 
-# griis version 1.10 from GBIF
+### GRIIS ------
+# version 1.10 from GBIF (https://cloud.gbif.org/griis/resource?r=griis-australia)
 griis_list <- read_tsv(here("data", "dwca-griis-australia-v1", "taxon.txt"))
 
 search_taxa_griis <- griis_list |>
@@ -79,3 +61,38 @@ griis_list_matched <- search_taxa_griis |>
   distinct() 
 
 saveRDS(griis_list_matched, here("data", "processed", "griis_list_matched.RDS"))
+
+### non-native species list ------
+# from Cam (source data that were used to derive https://lists.ala.org.au/speciesListItem/list/dr26948)
+read_xlsx("nnsl_20240806.xlsx") |> 
+  clean_names() |> 
+  filter(!str_detect(status, "from elsewhere in Australia"),
+         !str_detect(status, "native")) |> 
+  select(supplied_name, scientific_name, family, kingdom) |> 
+  saveRDS(here("data", "processed", "nnsl.RDS"))
+
+
+# lookups, processed datasets ------
+taxon_lookup <- read_csv(here("data", "taxon_lookup.csv"))
+
+# regions
+ibra_lookup <- tibble(region_name = c("Wet Tropics",
+                                      "Central Mackay Coast",
+                                      "South Eastern Queensland",
+                                      "Nandewar",
+                                      "New England Tablelands",
+                                      "NSW North Coast",
+                                      "Sydney Basin"),
+                      ecoregion_type = c(rep("tropics", 2),
+                                         rep("temperate", 5)))
+
+hotspot_regions <- ibra_lookup$region_name
+tropics_regions <- ibra_lookup$region_name[ibra_lookup$ecoregion_type == "tropics"]
+temperate_regions <- ibra_lookup$region_name[ibra_lookup$ecoregion_type == "temperate"]
+
+# fish habitats (needs to be redone if list of fish changes)
+fish_habitats <- readRDS("data/processed/fish_habitats.RDS")
+
+# invasive, non-native
+griis_list_matched <- readRDS(here("data", "processed", "griis_list_matched.RDS"))
+nnsl <- readRDS(here("data", "processed", "nnsl.RDS")) 
