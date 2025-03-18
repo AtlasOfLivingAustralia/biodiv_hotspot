@@ -64,7 +64,7 @@ saveRDS(griis_list_matched, here("data", "processed", "griis_list_matched.RDS"))
 
 ### non-native species list ------
 # from Cam (source data that were used to derive https://lists.ala.org.au/speciesListItem/list/dr26948)
-read_xlsx("nnsl_20240806.xlsx") |> 
+read_xlsx("data/nnsl_20240806.xlsx") |> 
   clean_names() |> 
   filter(!str_detect(status, "from elsewhere in Australia"),
          !str_detect(status, "native")) |> 
