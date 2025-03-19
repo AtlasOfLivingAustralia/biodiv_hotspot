@@ -9,7 +9,7 @@ animals <- reclassify_fish(reclassify_groups("vertebrates_hotspot.RDS"))
 plants_df <- plants |> 
   list_rbind(names_to = "taxon_type") |> 
   filter(taxon_rank == "species") |> 
-  select(-species, -taxon_rank) |> 
+  select(-taxon_rank) |> 
   ungroup()
 animals_df <- animals |> 
   list_rbind(names_to = "taxon_type") |> 
@@ -27,11 +27,11 @@ animals_tropics <- reclassify_fish(reclassify_groups("vertebrates_tropics.RDS"))
 plants_tropics_df <- plants_tropics |> 
   list_rbind(names_to = "taxon_type") |> 
   filter(taxon_rank == "species") |> 
-  select(-species, -taxon_rank) |> 
+  select(-taxon_rank) |> 
   ungroup()
 animals_tropics_df <- animals_tropics |> 
   list_rbind(names_to = "taxon_type") |> 
-  select(-species, -taxon_rank) |> 
+  select(-taxon_rank) |> 
   ungroup()
 
 animals_tropics_df |> 
@@ -45,7 +45,7 @@ animals_temperate <- reclassify_fish(reclassify_groups("vertebrates_temperate.RD
 plants_temperate_df <- plants_temperate |> 
   list_rbind(names_to = "taxon_type") |>
   filter(taxon_rank == "species") |> 
-  select(-species, -taxon_rank) |> 
+  select(-taxon_rank) |> 
   ungroup()
 animals_temperate_df <- animals_temperate |> 
   list_rbind(names_to = "taxon_type") |> 
@@ -108,11 +108,12 @@ get_putative_endemic_spp("vertebrates_temperate_counts.RDS")
 
 ### vascular plants --------
 
-readRDS(here("data", "processed", "vascular_plants_hotspot_endemic.RDS")) |> 
+readRDS(here("data", "processed", "vascular_plants_hotspot_endemic.RDS")) |>  
   list_rbind(names_to = "taxon_type") |> 
-  filter(taxon_rank == "species", 
-         is.na(endemic)) |> 
-  filter(between(region_count, 1, 9)) |> 
+  filter(taxon_rank == "species",
+         is.na(endemic),
+         between(region_count, 1, 9),
+         aus_count == region_count) |> 
   select(taxon_concept_id, 
          species_name, 
          taxon_type,
@@ -123,8 +124,9 @@ readRDS(here("data", "processed", "vascular_plants_hotspot_endemic.RDS")) |>
 readRDS(here("data", "processed", "vascular_plants_temperate_endemic.RDS")) |> 
   list_rbind(names_to = "taxon_type") |> 
   filter(taxon_rank == "species", 
-         is.na(endemic)) |> 
-  filter(between(region_count, 1, 9)) |> 
+         is.na(endemic),
+         between(region_count, 1, 9),
+         aus_count == region_count) |> 
   select(taxon_concept_id, 
          species_name, 
          taxon_type,
@@ -135,8 +137,9 @@ readRDS(here("data", "processed", "vascular_plants_temperate_endemic.RDS")) |>
 readRDS(here("data", "processed", "vascular_plants_tropics_endemic.RDS")) |> 
   list_rbind(names_to = "taxon_type") |> 
   filter(taxon_rank == "species", 
-         is.na(endemic)) |> 
-  filter(between(region_count, 1, 9)) |> 
+         is.na(endemic),
+         between(region_count, 1, 9),
+         aus_count == region_count) |> 
   select(taxon_concept_id, 
          species_name, 
          taxon_type,

@@ -4,6 +4,9 @@
 # onwards, are not listed as extinct or extinct in the wild by the EPBC, do not
 # occur on the GRIIS or non-native species lists, and are not hybrids (where 
 # the species name follows the patterns: string x string OR string X string).
+#
+# NOTE: If re-writing scripts, probably worth turning 6 chunks of code into 
+# functions
 
 # vertebrates ------
 # hotspot 
