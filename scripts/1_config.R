@@ -64,7 +64,7 @@ saveRDS(griis_list_matched, here("data", "processed", "griis_list_matched.RDS"))
 
 ### non-native species list ------
 # from Cam (source data that were used to derive https://lists.ala.org.au/speciesListItem/list/dr26948)
-read_xlsx("data/nnsl_20240806.xlsx") |> 
+read_xlsx(here("data", "nnsl_20240806.xlsx")) |> 
   clean_names() |> 
   filter(!str_detect(status, "from elsewhere in Australia"),
          !str_detect(status, "native")) |> 
@@ -91,7 +91,7 @@ tropics_regions <- ibra_lookup$region_name[ibra_lookup$ecoregion_type == "tropic
 temperate_regions <- ibra_lookup$region_name[ibra_lookup$ecoregion_type == "temperate"]
 
 # fish habitats (needs to be redone if list of fish changes)
-fish_habitats <- readRDS("data/processed/fish_habitats.RDS")
+fish_habitats <- readRDS(here("data", "processed", "fish_habitats.RDS"))
 
 # invasive, non-native
 griis_list_matched <- readRDS(here("data", "processed", "griis_list_matched.RDS"))
