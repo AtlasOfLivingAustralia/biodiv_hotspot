@@ -11,9 +11,6 @@
 #
 # Lists of possibly endemic species, with between 1 and 9 records in regions
 # of interest, are generated for experts to manually verify.
-# 
-# NOTE: if re-writing scripts, parquet files would be faster to write (but
-# bigger) so might be worth swapping over from RDS files
 
 
 # vertebrates ------
@@ -37,18 +34,19 @@ aus_grid <- st_make_grid(aus_map,
   rowid_to_column(var = "grid_id")
 
 ### get occurrence records ------
-dir.create("data/tmp_occ")
+dir.create("data/occ")
 
 # keep this as a reference for joining later 
 vertebrate_taxa <- reclassify_groups("vertebrates_hotspot.RDS") |> 
-  list_rbind(names_to = "ala_classification") |> 
+  reclassify_fish() |> 
+  list_rbind(names_to = "ala_classification") |>
   select(ala_classification, taxon_concept_id)
 
 vertebrate_taxa |> 
   pull(taxon_concept_id) |> 
   map(save_occ)
 
-all_occ <- list.files("data/tmp_occ", full.names = TRUE)
+all_occ <- list.files("data/occ", full.names = TRUE)
 
 ### hotspot ----
 all_occ |> 
@@ -68,7 +66,7 @@ tropics_spp <- readRDS(here("data", "processed", "vertebrates_tropics.RDS")) |>
   
 all_occ |> 
   as_tibble() |> 
-  mutate(species_name = str_extract(value, "(?<=occ/).*?(?=\\.RDS)")) |> 
+  mutate(species_name = str_extract(value, "(?<=occ/).*?(?=\\.parquet)")) |> 
   full_join(tropics_spp, by = "species_name") |> 
   filter(!is.na(tropics_id)) |> 
   pull(value) |> 
@@ -87,7 +85,7 @@ temperate_spp <- readRDS(here("data", "processed", "vertebrates_temperate.RDS"))
 
 all_occ |> 
   as_tibble() |> 
-  mutate(species_name = str_extract(value, "(?<=occ/).*?(?=\\.RDS)")) |> 
+  mutate(species_name = str_extract(value, "(?<=occ/).*?(?=\\.parquet)")) |> 
   full_join(temperate_spp, by = "species_name") |> 
   filter(!is.na(temperate_id)) |> 
   pull(value) |> 
