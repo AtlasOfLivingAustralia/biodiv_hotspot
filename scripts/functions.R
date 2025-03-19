@@ -92,13 +92,12 @@ save_occ <- function(taxon_concept_id) {
            decimalLatitude, 
            decimalLongitude) |> 
     atlas_occurrences() |> 
-    saveRDS(paste0("data/tmp_occ/", species_name, ".RDS"))
-  
+    write_parquet(sink = paste0("data/occ/", species_name, ".parquet"))
 }
 
 get_grid_counts <- function(fpath, region_sf) {
   
-  occ <- readRDS(fpath)
+  occ <- read_parquet(fpath)
   
   occ_sf <- occ |> 
     st_as_sf(coords = c("decimalLongitude", "decimalLatitude"), 
@@ -152,8 +151,9 @@ get_putative_endemic_spp <- function(filename) {
            endemic = case_when(
              between(region_count, 10, 50) & prop_within_region == 1.00 ~ "endemic",
              region_count > 50 & prop_within_region >= 0.950 ~ "endemic")) |> 
-    filter(is.na(endemic)) |>
-    filter(between(region_count, 1, 9)) |> 
+    filter(is.na(endemic),
+           between(region_count, 1, 9),
+           total_count == region_count) |> 
     select(taxon_concept_id, 
            species_name, 
            taxon_type = ala_classification,

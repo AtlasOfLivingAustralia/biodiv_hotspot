@@ -1,4 +1,4 @@
-# This script derives metedata relating to this project 
+# This script derives metadata relating to this project 
 
 # 1. ALA DQ profile -------
 # Gets the values for the ALA DQ profile, with descriptions and a list of the
