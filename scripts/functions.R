@@ -185,4 +185,28 @@ summarise_counts <- function(spp_richness_csv, animal_endemic_csv, plant_endemic
   
 }
 
-
+get_in_out_counts <- function(tcID, region) {
+  
+  # counts in ibra regions within hotspot 
+  counts_inside <- galah_call() |> 
+    filter(taxonConceptID == tcID, 
+           year >= 1950, 
+           cl1048 %in% region) |> 
+    apply_profile(ALA) |> 
+    atlas_counts() |> 
+    pull(count)
+  
+  # counts in ibra regions outside of hotspot
+  counts_outside <- galah_call() |> 
+    filter(taxonConceptID == tcID, 
+           year >= 1950, 
+           !(cl1048 %in% region)) |> 
+    apply_profile(ALA) |> 
+    atlas_counts() |> 
+    pull(count)
+  
+  tibble(inside = counts_inside, 
+         outside = counts_outside,
+         taxon_concept_id = tcID)
+  
+}
